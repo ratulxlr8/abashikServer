@@ -29,11 +29,19 @@ app.get("/", (req, res) => {
 client.connect((err) => {
   const renterCollection = client.db("abashik").collection("renterCollection");
   const ownerCollection = client.db("abashik").collection("ownerCollection");
+  const reqCollection = client.db("abashik").collection("reqCollection");
   const propertyCollection = client
     .db("abashik")
     .collection("propertyCollection");
   // perform actions on the collection object
   app.post("/renter", (req, res) => {
+    const renter = req.body;
+    console.log(renter);
+    renterCollection.insertOne(renter).then((result) => {
+      //   res.send(result.insertCount > 0);
+    });
+  });
+  app.post("/newsaa", (req, res) => {
     const renter = req.body;
     console.log(renter);
     renterCollection.insertOne(renter).then((result) => {
@@ -49,6 +57,30 @@ client.connect((err) => {
     });
   });
   //adding property ends
+
+  //reter request
+  app.post("/rentrequest", (req, res) => {
+    const rentreq = req.body;
+    console.log(rentreq);
+    reqCollection.insertOne(rentreq).then((result) => {
+      //   res.send(result.insertCount > 0);
+    });
+  });
+  app.delete("/rentrequest/:id", (req, res) => {
+    // console.log(req.params.id);
+    reqCollection.deleteOne({ email: req.params.id }).then((result) => {
+      console.log(result);
+    });
+  });
+  app.get("/rentrequestView", (req, res) => {
+    // console.log(req.query.email);
+    reqCollection.find({}).toArray((err, documents) => {
+      // console.log(documents);
+      res.send(documents);
+      console.log(documents);
+    });
+  });
+  //renter request ends
 
   app.post("/isOwner", (req, res) => {
     const email = req.body.email;
